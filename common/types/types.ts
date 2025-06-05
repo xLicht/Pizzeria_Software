@@ -9,8 +9,13 @@ export interface NavItem {
 }
 
 export interface Pedido {
-  id: string;
-  cliente: string;
-  fecha: string;
-  estado: "Pendiente" | "Enviado" | "Entregado";
+  idPedido: number;
+  tipo?: string;
+  precioTotal: number;
+  extras?: string;
+  direccion: string;
+  estado?: string;
+  idEmpleado?: number;
+  idCliente?: number;
+  pagado: boolean;
 }

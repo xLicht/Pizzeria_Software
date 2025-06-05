@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import VentaPage from "./pages/MenuVentaPage";
 import { Routes, Route } from "react-router-dom";
-import type { NavItem } from "./types/types";
+import type { NavItem } from "../common/types/types";
 
 import Sidebar from "./components/Sidebar";
 import MenuPrincipalPage from "./pages/MenuPrincipalPage";

@@ -1,6 +1,6 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import type { NavItem } from "../types/types";
+import type { NavItem } from "../../common/types/types";
 interface Props {
   items: NavItem[];
   heading: string;
