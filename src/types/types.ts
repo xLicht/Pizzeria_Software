@@ -7,3 +7,10 @@ export interface NavItem {
   path: string;
   element: ReactElement;
 }
+
+export interface Pedido {
+  id: string;
+  cliente: string;
+  fecha: string;
+  estado: "Pendiente" | "Enviado" | "Entregado";
+}
