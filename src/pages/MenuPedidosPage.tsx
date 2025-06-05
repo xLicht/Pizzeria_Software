@@ -60,8 +60,8 @@ export default function MenuPedidosPage() {
   ];
   return (
     <>
-      <div className="py-2 justify-items-center bg-amber-400">
-        <h1 className="text-3xl font-bold">Página de Pedidos</h1>
+      <div className="py-2 justify-items-center bg-gray-800">
+        <h1 className="text-3xl font-bold text-white">Página de Pedidos</h1>
       </div>
       <div className="flex justify-center items-center gap-4 px-4 pt-8">
         <h2 className="text-2xl">Buscar por ID:</h2>
