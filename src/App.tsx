@@ -17,6 +17,7 @@ import MenuClientesPage from "./pages/MenuClientesPage";
 import MenuInventarioPage from "./pages/MenuInventarioPage";
 import MenuMenuPage from "./pages/MenuMenuPage";
 import MenuEmpleadosPage from "./pages/MenuEmpleadosPage";
+import NuevoPedidoPage from "./pages/NuevoPedidoPage";
 const App = () => {
   const navBar: NavItem[] = [
     {
@@ -70,6 +71,7 @@ const App = () => {
             path="*"
             element={<p className="p-6">404 – Página no encontrada</p>}
           />
+          <Route path="/nuevo-pedido" element={<NuevoPedidoPage />} />{" "}
         </Routes>
       </main>
     </div>

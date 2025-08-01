@@ -8,7 +8,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = ({ children, className = "" }: Props) => {
   return (
     <button
-      className={`rounded-md font-medium transition-colors focus: outline-none focus: ring-2 focus:ring-2blue-500 ${className}`}
+      className={`rounded-md font-medium transition-colors
+        focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
     >
       {children}
     </button>

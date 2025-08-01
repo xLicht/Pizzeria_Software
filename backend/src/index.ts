@@ -3,7 +3,9 @@ import cors from "cors";
 import { getConnection } from "./db";
 import sql from "mssql";
 import type { Pedido } from "../../common/types/types";
+import type { Platillo} from "../../common/types/types"
 import { getTodosLosPedidos } from "./services/pedidoService";
+import { getTodosLosPlatillos} from "./services/platilloService";
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -18,6 +20,15 @@ app.get("/api/pedidos", async (_req, res) =>{
         res.status(500).json({error: "Error al obtener pedidos"});
     }
 });
+
+app.get ("/api/platillos", async (_req, res) =>{
+    try{
+        const platillos: Platillo[] = await getTodosLosPlatillos();
+        res.json(platillos);
+    } catch (error){
+        res.status(500).json({error: "Error al obtener los platillos"});
+    }
+})
 
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);

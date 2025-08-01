@@ -19,3 +19,11 @@ export interface Pedido {
   idCliente?: number;
   pagado: boolean;
 }
+
+export interface Platillo {
+  idPlatillo: number;
+  nombre: string;
+  precio: number;
+  descripcion: string;
+  estado: number;
+}
