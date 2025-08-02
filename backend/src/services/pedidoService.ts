@@ -31,3 +31,11 @@ export async function getTodosLosPedidos(): Promise<PedidoDB[]> {
     pagado: row.Pagado === 1,
   }));
 }
+
+export async function getIdPedido(): Promise<number> {
+  const pool = await getConnection();
+  const result = await pool.request().query(`
+    select idPedido from vwUltimoIdPedido`);
+
+    return Number(result.recordset[0].idPedido);
+}

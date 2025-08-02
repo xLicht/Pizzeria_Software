@@ -14,6 +14,7 @@ interface Props<T> {
   evenRowClassName?: string;
   oddRowClassName?: string;
   rowDividerClassName?: string;
+  onRowClick?: (row: T) => void;
 }
 
 export default function Table<T>({
@@ -26,6 +27,7 @@ export default function Table<T>({
   evenRowClassName = "bg-white",
   oddRowClassName = "bg-gray-50",
   rowDividerClassName = "divide-gray-200",
+  onRowClick,
 }: Props<T>) {
   return (
     <div
@@ -49,7 +51,10 @@ export default function Table<T>({
           {data.map((row, i) => (
             <tr
               key={i}
-              className={i % 2 === 0 ? evenRowClassName : oddRowClassName}
+              className={`${i % 2 === 0 ? evenRowClassName : oddRowClassName} ${
+                onRowClick ? "cursor-pointer hover:bg-gray-100" : ""
+              }`}
+              onClick={() => onRowClick?.(row)}
             >
               {columns.map((col, j) => (
                 <td key={j} className="px-4 py-2 whitespace-nowrap text-sm">

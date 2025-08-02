@@ -14,24 +14,14 @@ const pedidoColumns = [
   { header: "IdPlatillo", accessor: (p: Platillo) => p.idPlatillo },
   { header: "Nombre", accessor: (p: Platillo) => p.nombre },
   { header: "Precio", accessor: (p: Platillo) => `$${p.precio.toFixed(2)}` },
-  { header: "Cantidad", accessor: () => "0" }, // si aún no aplicas la lógica
 ];
 
 export default function NuevoPedidoPage() {
   const [menuData, setMenuData] = useState<Platillo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [idPedidoQ, setIdPedidoQ] = useState<number>();
 
-  const [pedidoData, setPedidoData] = useState<
-    (Platillo & { cantidad: number })[]
-  >([]);
-
-  const agregarPlatilloAPedido = (platillo: Platillo) => {
-    setPedidoData((prev) => {
-      const existe = prev.find((p) => p.idPlatillo === platillo.idPlatillo);
-      if (existe) return prev;
-      return [...prev, { ...platillo, cantidad: 1 }];
-    });
-  };
+  const [pedidoData, setPedidoData] = useState<Platillo[]>([]);
 
   useEffect(() => {
     const fetchPlatillos = async () => {
@@ -48,6 +38,92 @@ export default function NuevoPedidoPage() {
     fetchPlatillos();
     console.log(menuData);
   }, []);
+
+  useEffect(() => {
+    const fetchIdPedido = async () => {
+      try {
+        const resp = await fetch("http://localhost:4000/api/pedidos/idPedido");
+        const json = await resp.json();
+        setIdPedidoQ(json);
+      } catch (error) {
+        console.log("Error al traer idPedido:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchIdPedido();
+    console.log(idPedidoQ);
+  });
+
+  async function handleGuardarPedido() {
+    try {
+      const resp = await fetch(
+        "http://localhost:4000/api/pedidos/guardarPedido",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tipo,
+            precioTotal,
+            extras,
+            direccion,
+            estado,
+            empleado,
+            idCliente,
+            platillos: platillosParaEnviar,
+          }),
+        }
+      );
+      if (!resp.ok) throw new Error(await resp.text());
+      alert("Pedido Guardado!!");
+    } catch (err) {
+      console.error(err);
+      alert("Error guardando el pedido: " + err);
+    }
+  }
+
+  function copyRow<T>(
+    row: T,
+    _source: [T[], React.Dispatch<React.SetStateAction<T[]>>],
+    [target, setTarget]: [T[], React.Dispatch<React.SetStateAction<T[]>>]
+  ) {
+    setTarget([...target, row]);
+  }
+  function deleteRow<T>(
+    row: T,
+    [list, setList]: [T[], React.Dispatch<React.SetStateAction<T[]>>]
+  ) {
+    const idx = list.findIndex((r) => r === row);
+    if (idx < 0) return;
+    const newList = [...list.slice(0, idx), ...list.slice(idx + 1)];
+    setList(newList);
+  }
+
+  const handleMenuRowClick = (row: Platillo) => {
+    copyRow(row, [menuData, setMenuData], [pedidoData, setPedidoData]);
+  };
+
+  const handlePedidoRowClick = (row: Platillo) => {
+    deleteRow(row, [pedidoData, setPedidoData]);
+  };
+
+  const counter = new Map<number, number>();
+  pedidoData.forEach((p) => {
+    counter.set(p.idPlatillo, (counter.get(p.idPlatillo) || 0) + 1);
+  });
+
+  const platillosParaEnviar = Array.from(counter.entries()).map(
+    ([idPlatillo, cantidad]) => ({ idPlatillo, cantidad })
+  );
+
+  const [tipo, setTipo] = useState<string>("Domicilio");
+  const [estado, setEstado] = useState<string>("Pendiente");
+  const [precioTotal, setPrecioTotal] = useState("");
+  const [extras, setExtras] = useState("");
+  const [direccion, setDireccion] = useState("");
+  const [empleado, setIdEmpleado] = useState("");
+  const [idCliente, setIdCliente] = useState("");
+  const [nomCliente, setNomCliente] = useState("");
   return (
     <div className="min-h-screen bg-red-50">
       <div className="py-2 px-10 justify-items-center bg-red-900">
@@ -65,6 +141,7 @@ export default function NuevoPedidoPage() {
                 className="w-60"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
                 placeholder="Nombre"
+                value={empleado}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -79,6 +156,7 @@ export default function NuevoPedidoPage() {
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
                 placeholder="12345"
+                value={idPedidoQ?.toString()}
               />
             </div>
             {/* Dirección */}
@@ -88,6 +166,7 @@ export default function NuevoPedidoPage() {
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
                 placeholder="Calle, número"
+                value={nomCliente}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -96,6 +175,7 @@ export default function NuevoPedidoPage() {
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
                 placeholder="Calle, número"
+                value={direccion}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -104,6 +184,7 @@ export default function NuevoPedidoPage() {
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
                 placeholder="Calle, número"
+                value={idCliente}
               />
             </div>
           </div>
@@ -128,6 +209,7 @@ export default function NuevoPedidoPage() {
               columns={menuColumns}
               data={menuData}
               heightClass="h-72"
+              onRowClick={handleMenuRowClick}
             />
           </div>
 
@@ -146,26 +228,34 @@ export default function NuevoPedidoPage() {
               columns={pedidoColumns}
               data={pedidoData}
               heightClass="h-72"
+              onRowClick={handlePedidoRowClick}
             />
           </div>
 
           {/* Extras y Total */}
           <div className="flex flex-col justify-start">
             <h2 className="text-black text-xl font-bold mb-2">Extras</h2>
-            <textarea className="h-[150px] border-2 bg-amber-200 border-amber-500 resize-none mb-4"></textarea>
+            <textarea
+              value={extras}
+              className="h-[150px] border-2 bg-amber-200 border-amber-500 resize-none mb-4"
+            ></textarea>
 
             <h2 className="text-black text-xl font-bold mb-1">Total</h2>
             <TextBox
               className="w-40"
               inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
               placeholder="Calle, número"
+              value={precioTotal}
             />
 
             <div className="flex gap-4 py-2">
               <button className="bg-amber-400 px-4 py-2 rounded font-bold text-black hover:bg-amber-500 shadow-md">
                 Pagar
               </button>
-              <button className="bg-amber-400 px-4 py-2 rounded font-bold text-black hover:bg-amber-500 shadow-md">
+              <button
+                onClick={handleGuardarPedido}
+                className="bg-amber-400 px-4 py-2 rounded font-bold text-black hover:bg-amber-500 shadow-md"
+              >
                 Guardar
               </button>
             </div>

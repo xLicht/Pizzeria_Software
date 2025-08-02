@@ -1,4 +1,5 @@
 import express from "express";
+import path from "path";
 import cors from "cors";
 import { getConnection } from "./db";
 import sql from "mssql";
@@ -6,6 +7,7 @@ import type { Pedido } from "../../common/types/types";
 import type { Platillo} from "../../common/types/types"
 import { getTodosLosPedidos } from "./services/pedidoService";
 import { getTodosLosPlatillos} from "./services/platilloService";
+import { getIdPedido } from "./services/pedidoService";
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -18,6 +20,15 @@ app.get("/api/pedidos", async (_req, res) =>{
         res.json(pedidos);
     } catch (error){
         res.status(500).json({error: "Error al obtener pedidos"});
+    }
+});
+
+app.get("/api/pedidos/idPedido", async (_req, res) => {
+    try{
+        const idPedido: number = await getIdPedido();
+        res.json(idPedido);
+    } catch (error){
+        res.status(500).json({error: "Error al obtener el idPedido"});
     }
 });
 
