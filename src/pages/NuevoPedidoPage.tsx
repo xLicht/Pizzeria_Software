@@ -68,14 +68,13 @@ export default function NuevoPedidoPage() {
             extras,
             direccion,
             estado,
-            empleado,
+            idEmpleado,
             idCliente,
             platillos: platillosParaEnviar,
           }),
         }
       );
       if (!resp.ok) throw new Error(await resp.text());
-      alert("Pedido Guardado!!");
     } catch (err) {
       console.error(err);
       alert("Error guardando el pedido: " + err);
@@ -121,7 +120,7 @@ export default function NuevoPedidoPage() {
   const [precioTotal, setPrecioTotal] = useState("");
   const [extras, setExtras] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [empleado, setIdEmpleado] = useState("");
+  const [idEmpleado, setIdEmpleado] = useState("");
   const [idCliente, setIdCliente] = useState("");
   const [nomCliente, setNomCliente] = useState("");
   return (
@@ -140,8 +139,9 @@ export default function NuevoPedidoPage() {
               <TextBox
                 className="w-60"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
-                placeholder="Nombre"
-                value={empleado}
+                placeholder="Id"
+                value={idEmpleado}
+                onChange={(e) => setIdEmpleado(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -159,14 +159,15 @@ export default function NuevoPedidoPage() {
                 value={idPedidoQ?.toString()}
               />
             </div>
-            {/* Dirección */}
+            {/* Nombre Cliente */}
             <div className="flex items-center gap-2">
               <label className="w-24 text-gray-700">Cliente:</label>
               <TextBox
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
-                placeholder="Calle, número"
+                placeholder="Nombre Cliente"
                 value={nomCliente}
+                onChange={(e) => setNomCliente(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -174,8 +175,9 @@ export default function NuevoPedidoPage() {
               <TextBox
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
-                placeholder="Calle, número"
+                placeholder="Calle"
                 value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -183,8 +185,9 @@ export default function NuevoPedidoPage() {
               <TextBox
                 className="w-40"
                 inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
-                placeholder="Calle, número"
+                placeholder="Id Cliente"
                 value={idCliente}
+                onChange={(e) => setIdCliente(e.target.value)}
               />
             </div>
           </div>
@@ -233,31 +236,33 @@ export default function NuevoPedidoPage() {
           </div>
 
           {/* Extras y Total */}
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col h-80">
             <h2 className="text-black text-xl font-bold mb-2">Extras</h2>
-            <textarea
+            <TextBox
               value={extras}
-              className="h-[150px] border-2 bg-amber-200 border-amber-500 resize-none mb-4"
-            ></textarea>
+              className="w-70"
+              inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
+              onChange={(e) => setExtras(e.target.value)}
+            ></TextBox>
 
             <h2 className="text-black text-xl font-bold mb-1">Total</h2>
             <TextBox
               className="w-40"
               inputClassName="h-7 bg-amber-200 border-2 border-amber-500"
-              placeholder="Calle, número"
               value={precioTotal}
+              onChange={(e) => setPrecioTotal(e.target.value)}
             />
 
-            <div className="flex gap-4 py-2">
-              <button className="bg-amber-400 px-4 py-2 rounded font-bold text-black hover:bg-amber-500 shadow-md">
+            <div className="flex gap-4 justify-center mt-auto">
+              <Button className="border-2 w-66 font-semibold h-10 bg-amber-200 border-amber-500">
                 Pagar
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleGuardarPedido}
-                className="bg-amber-400 px-4 py-2 rounded font-bold text-black hover:bg-amber-500 shadow-md"
+                className="border-2 w-66 font-semibold h-10 bg-amber-200 border-amber-500"
               >
                 Guardar
-              </button>
+              </Button>
             </div>
           </div>
         </div>

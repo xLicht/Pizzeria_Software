@@ -5,9 +5,10 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-const Button = ({ children, className = "" }: Props) => {
+const Button = ({ children, className = "", ...props }: Props) => {
   return (
     <button
+      {...props}
       className={`rounded-md font-medium transition-colors
         focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
     >
